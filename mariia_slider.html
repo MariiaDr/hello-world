@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Slider</title>
+	<style>
+		body{
+			background: url(img/bg.jpg);
+		}
+	</style>
+	<script src="jquery-3.2.1.min.js"></script>
+	<!-- <script src="jquery.mSlider.js"></script> -->
+	<script>
+		$(function(){
+			var customWidth = 600;
+			var customHeight = 300;
+			var fadeFast = 1000;
+
+			var isClicked = false;
+			var visibleSlide = 0;
+			var totalSlides = $("#slider .slide").length;
+			var intervalAutoplay;
+
+			$("#slider").css({
+				"width" : customWidth,
+				"height" : customHeight,
+			});
+
+			function createButtons(){
+				$("#slider").append("<div class='slider_buttons'><div/>");
+				$(".slider_buttons").append("<button class='prev'><i class='icon-left-open' aria-hidden='true'></i></button>");
+				$(".slider_buttons").append("<button class='next'><i class='icon-right-open' aria-hidden='true'></i></button>");
+				$(".slider_buttons").append("<a class='btn_play'><i class='icon-play' aria-hidden='true'></i></a>");
+				$("#slider").append("<div class='pagination'></div>");
+			};
+			createButtons();
+
+			$(".next").click(function(){
+				if (isClicked == false) {
+					ChangeNextSlide();	
+				}
+			});
+
+			$(".prev").click(function(){
+				if (isClicked == false) {
+					ChangePrevSlide();	
+				}
+			});
+
+			function ChangeNextSlide(){
+				isClicked = true;
+				var nextIdx = visibleSlide + 1
+				if (nextIdx >= totalSlides) {
+					nextIdx = 0;
+				}
+				$("#slider .slide").eq(visibleSlide).fadeOut(fadeFast, function(){
+					$(this).toggleClass("visible");
+				})
+				
+				$("#slider .slide").eq(nextIdx).fadeIn(fadeFast, function(){
+					$(this).toggleClass("visible");
+					isClicked = false;
+				});
+				visibleSlide = nextIdx;
+				pagination();
+			}
+
+			function ChangePrevSlide(){
+				isClicked = true;
+				var nextIdx = visibleSlide - 1
+				if (nextIdx == -1) {
+					nextIdx = totalSlides-1;
+				}
+				$(".slide").eq(visibleSlide).fadeOut(fadeFast, function(){
+					$(this).toggleClass("visible");
+				})
+				
+				$("#slider .slide").eq(nextIdx).fadeIn(fadeFast, function(){
+					$(this).toggleClass("visible");
+					isClicked = false;
+				});
+				visibleSlide = nextIdx;
+				pagination();
+			}
+
+			$("#slider .slide").each(function(i) { 
+				$(".pagination").append("<a><i class='icon-circle-empty' aria-hidden='true'></i></a>");
+			   pagination();	   
+			});
+
+			function pagination(){
+				$('.pagination a').removeClass('active');
+				$('.pagination a').eq(visibleSlide).addClass('active');
+			}
+
+			// autoplay
+			var playClicked = false;
+
+			$(".btn_play").click(function(){
+				
+				if (playClicked == false) {
+					$(".btn_play i").removeClass("icon-play").addClass("icon-pause");
+					intervalAutoplay = setInterval(ChangeNextSlide, 2000);
+					playClicked = true;
+				} else {
+					$(".btn_play i").removeClass("icon-pause").addClass("icon-play");
+					clearInterval(intervalAutoplay);
+					playClicked = false;
+				}
+
+			});
+
+
+		});
+	</script>
+	<link rel="stylesheet" href="css/fontello.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div id="slider">
+		<img class="slide visible" src="img/slide1.jpg" alt="slide">
+		<img class="slide" src="img/slide2.jpg" alt="slide">
+		<img class="slide" src="img/slide3.jpg" alt="slide">
+		<img class="slide" src="img/slide4.jpg" alt="slide">
+		<div class="slide">
+			<h2>Slide</h2>
+		</div>
+	</div>
+<!-- 	<script>
+		$(document).ready(function(){
+			$('#slider').mSlider();
+		});
+	</script> -->
+</body>
+</html>
