@@ -1,4 +1,3 @@
-# hello-world
-Slider
 
-Hello Humans!
+Jquery Slider
+
